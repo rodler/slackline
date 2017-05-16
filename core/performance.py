@@ -46,7 +46,7 @@ class Performance():
         try:
             for key in context.symbols:
                 if not key in self.start_prices:
-                    if ~isnan(context.current[key].four):
+                    if key in context.current and ~isnan(context.current[key].four):
                         self.start_prices[key] = context.current[key].four
 
             self.transactions = []
@@ -78,6 +78,8 @@ class Performance():
                     }
         except:
             print traceback.format_exc()
+            print '---------------------->>>',context.current[key]
+            logger.info(traceback.format_exc())
 
 
     def get_latest_performance(self):

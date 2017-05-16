@@ -69,6 +69,7 @@ class TestCode(unittest.TestCase):
 
         # # Testing Order for delayed execution
         tcfg.DELAYED_EXECUTION = True
+        tcfg.PRINT_TRADES = False
         strategy = Strategy(tcfg,handle_data=handle_data,initialize=initialize_test)
         perf = strategy.run(data)
         self.assertEqual(3600,strategy.context.portfolio.execution_time['1'][2].total_seconds())

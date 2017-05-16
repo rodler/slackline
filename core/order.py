@@ -25,10 +25,11 @@ def order(context,instrument,pos,field='four',exec_mode = 'cross'):
         context.load[instrument] = context.config.DELAY_CYCLES-1
         # SETTING UP EXECUTION DELAY
         _ct = get_current_date(context)
-        context.order_submission_time[instrument] = _ct
+        if not instrument in context.order_submission_time or not context.order_submission_time[instrument]:
+            context.order_submission_time[instrument] = _ct
+            # 'ask' is later used for the 'close' field as well
+            context.order_submission_price[instrument] = {'one':context.current[instrument].one,'four':context.current[instrument].four}
 
-        # 'ask' is later used for the 'close' field as well
-        context.order_submission_price[instrument] = {'one':context.current[instrument].one,'four':context.current[instrument].four}
         if context.config.PRINT_TRADES:
             print 'Order Loaded',instrument,pos,_ct,getattr(context.current[instrument],context.execution_field['instrument'])
             pass
@@ -63,6 +64,7 @@ def order_execution(context,instrument):
         context.portfolio.execution_loss[instrument] = \
         [(getattr(context.current[instrument],context.execution_field['instrument'])-context.order_submission_price[instrument][context.execution_field['instrument']])*side]
 
+    context.order_submission_time[instrument] = None
     context.portfolio.cash -= context.order_pos[instrument]*context.portfolio.price[instrument][-1]
     reporting(context,instrument,0,current_date)
 
@@ -113,6 +115,7 @@ def tick_execution(context,instrument):
             except: context.portfolio.execution_loss[instrument] = [(context.current[instrument].four+context.current[instrument].one)/2. \
                     -(context.order_submission_price[instrument]['four']+context.order_submission_price[instrument]['one'])/2.]
 
+    context.order_submission_time[instrument] = None
     context.portfolio.cash -= context.order_pos[instrument]*context.portfolio.price[instrument][-1]
     reporting(context,instrument,0,current_date)
 
