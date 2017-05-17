@@ -200,7 +200,7 @@ class Strategy():
             if key in self.context.load:
                 if self.context.load[key] == 0:
                     tick_execution(self.context,key)
-                    self.context.load[key] = -1
+                    self.context.load.pop(key)
                 else:
                     self.context.load[key]-=1
 
