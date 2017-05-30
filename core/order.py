@@ -4,14 +4,14 @@ from slackline.core.utils import *
 def order(context,instrument,pos,field='four',exec_mode = 'cross'):
     context.exec_mode = exec_mode
     context.execution_field['instrument'] = field
-    if context.config.DELAY_CYCLES == 0:
-        context.config.DELAYED_EXECUTION = False
+
     # THIS TRIGGERS IF WE SPECIFY THE WRONG INSTRUMENT
     if len(context.portfolio.positions) and (not instrument in context.portfolio.positions) and context.before_trading==True:
         print '---Trying to order wrong instrument---',instrument
         exit()
     context.before_trading = False
     context.order_pos[instrument] = pos
+
     if context.config.DELAYED_EXECUTION == False:
         context.load[instrument] = -1
         # WE DON'T HAVE EXECUTION LOSSES HERE
@@ -21,6 +21,17 @@ def order(context,instrument,pos,field='four',exec_mode = 'cross'):
         # 'ask' is later used for the 'close' field as well
         context.order_submission_price[instrument] = {'one':context.current[instrument].one,'four':context.current[instrument].four}
         order_execution(context,instrument)
+
+    elif context.config.DELAYED_EXECUTION == True and context.config.DELAY_CYCLES == 0:
+        context.load[instrument] = -1
+        # WE DON'T HAVE EXECUTION LOSSES HERE
+        _ct = get_current_date(context)
+        context.order_submission_time[instrument] = _ct
+
+        # 'ask' is later used for the 'close' field as well
+        context.order_submission_price[instrument] = {'one':context.current[instrument].one,'four':context.current[instrument].four}
+        tick_execution(context,instrument)
+
     else:
         context.load[instrument] = context.config.DELAY_CYCLES-1
         # SETTING UP EXECUTION DELAY
@@ -100,11 +111,13 @@ def tick_execution(context,instrument):
         if context.exec_mode=='cross':
             # ON THE LONG SIDE
             if context.order_pos[instrument]>=0:
+                print 'long side: ask: %s, bid %s'%(context.current[instrument].four,context.current[instrument].one)
                 context.portfolio.price[instrument] = [context.current[instrument].four]
                 try: context.portfolio.execution_loss[instrument].append(context.current[instrument].four-context.order_submission_price[instrument]['four'])
                 except: context.portfolio.execution_loss[instrument] = [context.current[instrument].four-context.order_submission_price[instrument]['four']]
             # ON THE SHORT SIDE
             else:
+                print 'short side: ask: %s, bid %s'%(context.current[instrument].four,context.current[instrument].one)
                 context.portfolio.price[instrument] = [context.current[instrument].one]
                 try: context.portfolio.execution_loss[instrument].append(context.current[instrument].one-context.order_submission_price[instrument]['one'])
                 except: context.portfolio.execution_loss[instrument] = [context.current[instrument].one-context.order_submission_price[instrument]['one']]
@@ -114,6 +127,12 @@ def tick_execution(context,instrument):
                     -(context.order_submission_price[instrument]['four']+context.order_submission_price[instrument]['one'])/2.)
             except: context.portfolio.execution_loss[instrument] = [(context.current[instrument].four+context.current[instrument].one)/2. \
                     -(context.order_submission_price[instrument]['four']+context.order_submission_price[instrument]['one'])/2.]
+
+
+    if context.order_pos[instrument] < 0:
+        context.execution_field['instrument'] = 'one'
+    else:
+        context.execution_field['instrument'] = 'four'
 
     context.order_submission_time[instrument] = None
     context.portfolio.cash -= context.order_pos[instrument]*context.portfolio.price[instrument][-1]
