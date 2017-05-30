@@ -154,8 +154,7 @@ def reporting(context,instrument,commission,current_date):
             'EXECUTION:',instrument, \
             ' quantity:',context.order_pos[instrument],\
             ' price:',getattr(context.current[instrument],context.execution_field['instrument']), \
-            ' positions:',positions, \
-            'pnl:',pnl)
+            ' positions:',positions)
     logger.info(msg)
     order_id = random.randint(10000000,100000000)
     if context.config.PRINT_TRADES:
