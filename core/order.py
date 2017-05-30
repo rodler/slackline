@@ -111,13 +111,11 @@ def tick_execution(context,instrument):
         if context.exec_mode=='cross':
             # ON THE LONG SIDE
             if context.order_pos[instrument]>=0:
-                print 'long side: ask: %s, bid %s'%(context.current[instrument].four,context.current[instrument].one)
                 context.portfolio.price[instrument] = [context.current[instrument].four]
                 try: context.portfolio.execution_loss[instrument].append(context.current[instrument].four-context.order_submission_price[instrument]['four'])
                 except: context.portfolio.execution_loss[instrument] = [context.current[instrument].four-context.order_submission_price[instrument]['four']]
             # ON THE SHORT SIDE
             else:
-                print 'short side: ask: %s, bid %s'%(context.current[instrument].four,context.current[instrument].one)
                 context.portfolio.price[instrument] = [context.current[instrument].one]
                 try: context.portfolio.execution_loss[instrument].append(context.current[instrument].one-context.order_submission_price[instrument]['one'])
                 except: context.portfolio.execution_loss[instrument] = [context.current[instrument].one-context.order_submission_price[instrument]['one']]
