@@ -42,7 +42,7 @@ class Performance():
         if plot_result:
             plot(self.pnl_curve);show()
 
-    def log(self,context,price_field='four'):
+    def log(self,context,price_field='four',log_all=True):
         try:
             for key in context.symbols:
                 if not key in self.start_prices:
@@ -57,25 +57,26 @@ class Performance():
             # self.pnl_curve.append(context.portfolio.calc_pnl())
             # self.pnl_curve.append(cyth_pnl(context.portfolio))
             self.pnl_curve.append(context.portfolio.fast_calc_pnl())
-            long_short = context.portfolio.calc_ls()
-            short_exposure,long_exposure = context.portfolio.calc_exposure()
-            current_portfolio_value = context.portfolio.cash+(long_exposure+short_exposure)
-            start_prices = array([self.start_prices[k] for k in self.start_prices])
-            benchmark_cash_split = context.portfolio.starting_cash/len(self.start_prices)
-            current_prices = array([getattr(context.current[key],price_field) for key in self.start_prices])
-            benchmark_positions = floor(benchmark_cash_split/start_prices)
-            benchmark_value = sum(current_prices*benchmark_positions)
-            self.perf_log[self.trading_periods] = {
-                    'date':current_date,
-                    'pnl':self.pnl_curve[-1],
-                    'positions':long_short,
-                    'long_exposure':long_exposure,
-                    'short_exposure':short_exposure,
-                    'portfolio_value':current_portfolio_value,
-                    'benchmark_value':benchmark_value,
-                    'cash':context.portfolio.cash,
-                    'execution_loss': sum([sum(context.portfolio.execution_loss[key]) for key in context.portfolio.execution_loss])
-                    }
+            if log_all:
+                long_short = context.portfolio.calc_ls()
+                short_exposure,long_exposure = context.portfolio.calc_exposure()
+                current_portfolio_value = context.portfolio.cash+(long_exposure+short_exposure)
+                start_prices = array([self.start_prices[k] for k in self.start_prices])
+                benchmark_cash_split = context.portfolio.starting_cash/len(self.start_prices)
+                current_prices = array([getattr(context.current[key],price_field) for key in self.start_prices])
+                benchmark_positions = floor(benchmark_cash_split/start_prices)
+                benchmark_value = sum(current_prices*benchmark_positions)
+                self.perf_log[self.trading_periods] = {
+                        'date':current_date,
+                        'pnl':self.pnl_curve[-1],
+                        'positions':long_short,
+                        'long_exposure':long_exposure,
+                        'short_exposure':short_exposure,
+                        'portfolio_value':current_portfolio_value,
+                        'benchmark_value':benchmark_value,
+                        'cash':context.portfolio.cash,
+                        'execution_loss': sum([sum(context.portfolio.execution_loss[key]) for key in context.portfolio.execution_loss])
+                        }
         except:
             print traceback.format_exc()
             print '---------------------->>>',context.current[key]
