@@ -59,6 +59,7 @@ class Context():
         self.current_second = -1
         self.market_open = False
         self.trades =[]
+        self.exec_message = {}
 
     def record(self,field,value):
         current_date = get_current_date(self)
