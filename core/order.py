@@ -150,13 +150,13 @@ def reporting(context,instrument,commission,current_date):
     if len(context.performance.pnl_curve):
         pnl = context.performance.pnl_curve[-1]
     else: pnl = 0
-    msg = {get_current_date(context), \
+    msg = (str(get_current_date(context)), \
             'EXECUTION:',instrument, \
             ' quantity:',context.order_pos[instrument],\
             ' price:',getattr(context.current[instrument],context.execution_field['instrument']), \
             ' positions:',positions,
-            ' pnl:',pnl,
-            ' msg:',context.exec_msg}
+            ' pnl:',round(pnl,3),
+            ' msg:',str(context.exec_message))
     logger.info(msg)
     order_id = random.randint(10000000,100000000)
     if context.config.PRINT_TRADES:
