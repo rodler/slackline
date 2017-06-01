@@ -33,23 +33,23 @@ class Portfolio:
                 self.locked_pnl[instrument] = 0
 
             q = array(self.positions[instrument])
-            p_ask = array(self.context.current[instrument].four)
-            p_bid = array(self.context.current[instrument].one)
+            ask = array(self.context.current[instrument].four)
+            bid = array(self.context.current[instrument].one)
             v = array(self.price[instrument])
 
             # This is a better pnl calculation but it may not be so good for bars
-            net = np.sum((q*p_ask)[(q*p_ask)>0]) + np.sum((q*p_bid)[(q*p_bid)<0])
+            net = np.sum(q)*(ask*(q<0)+bid*(q>0))[0]
 
             # This is the standard pnl calculation
             # net = np.sum(q*p_ask)
             pnl_k=-np.sum(q*v)+net+self.locked_pnl[instrument]
             pnl += pnl_k
-            if sum(self.positions[instrument])==0:
-                self.positions[instrument] = [0]
-                self.price[instrument] = [0]
-                self.locked_pnl[instrument] = pnl_k
-        if pnl == 0:
-            pnl = sum([self.locked_pnl[key] for key in self.locked_pnl])
+            # if sum(self.positions[instrument])==0:
+                # self.positions[instrument] = [0]
+                # self.price[instrument] = [0]
+                # self.locked_pnl[instrument] = pnl_k
+        # if pnl == 0:
+            # pnl = sum([self.locked_pnl[key] for key in self.locked_pnl])
         return pnl
 
     def calc_ls(self):
