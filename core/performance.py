@@ -46,7 +46,7 @@ class Performance():
         try:
             for key in context.symbols:
                 if not key in self.start_prices:
-                    if key in context.current and ~isnan(context.current[key].four):
+                    if key in context.current and 'four' in dir(context.current[key]) and ~isnan(context.current[key].four):
                         self.start_prices[key] = context.current[key].four
 
             self.transactions = []
