@@ -264,8 +264,8 @@ def walk_forward(instruments,start,finish,train_period,test_period,num_runs):
 #*************************************************************************************
 
 if __name__=='__main__':
-    run_csv()
-    # run_web()
+    # run_csv()
+    run_web()
     # run_live()
     # run_random()
     # run_stream()

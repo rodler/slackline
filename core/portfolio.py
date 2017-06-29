@@ -43,11 +43,6 @@ class Portfolio:
             # This is the standard pnl calculation
             pnl_k=-np.sum(q*v)+net+self.locked_pnl[instrument]
             pnl += pnl_k
-            # elif sum(q)==0:
-                # self.positions[instrument] = [0]
-                # self.price[instrument] = [0]
-                # self.locked_pnl[instrument] =
-            # pnl = sum([self.locked_pnl[key] for key in self.locked_pnl])
         return pnl
 
     def calc_ls(self):

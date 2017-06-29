@@ -121,7 +121,6 @@ class TestCode(unittest.TestCase):
         strategy = Strategy(tcfg,handle_data=handle_data_step,initialize=initialize_step)
         results = strategy.run(data)
         self.assertTrue(results['pnl'][results['pnl'].keys()[-1]]==50)
-        self.assertTrue(results['benchmark_value'][results['benchmark_value'].keys()[-1]]==150000)
         self.assertTrue(results['portfolio_value'][results['portfolio_value'].keys()[-1]]==100050)
 
     def test_grid_search(self):

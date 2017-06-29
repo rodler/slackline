@@ -26,4 +26,4 @@ TRADES_FILE = 'results/test_trades.dat'
 LOG_TRADES_TO_FILE = False
 DELAY_CYCLES = 1
 RESULTS_FILE = '/tmp/slackline_results.dat'
-
+EXEC_MODE = 'mid'

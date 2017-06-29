@@ -1,8 +1,7 @@
 from slackline.core.utils import *
 
 
-def order(context,instrument,pos,field='four',exec_mode = 'cross'):
-    context.exec_mode = exec_mode
+def order(context,instrument,pos,field='four'):
     context.execution_field['instrument'] = field
 
     # THIS TRIGGERS IF WE SPECIFY THE WRONG INSTRUMENT
@@ -90,7 +89,7 @@ def tick_execution(context,instrument):
         context.portfolio.positions[instrument].append(context.order_pos[instrument])
         context.portfolio.entry[instrument].append(current_date)
         context.portfolio.execution_time[instrument].append(current_date-context.order_submission_time[instrument])
-        if context.exec_mode=='cross':
+        if context.config.EXEC_MODE=='cross':
             # ON THE LONG SIDE
             if context.order_pos[instrument]>=0:
                 context.portfolio.price[instrument].append(context.current[instrument].four)
@@ -99,7 +98,7 @@ def tick_execution(context,instrument):
             else:
                 context.portfolio.price[instrument].append(context.current[instrument].one)
                 context.portfolio.execution_loss[instrument].append(context.current[instrument].one-context.order_submission_price[instrument]['one'])
-        elif context.exec_mode == 'mid':
+        elif context.config.EXEC_MODE == 'mid':
             context.portfolio.price[instrument].append((context.current[instrument].four+context.current[instrument].one)/2.)
             context.portfolio.execution_loss[instrument].append((context.current[instrument].four+context.current[instrument].one)/2.-(context.order_submission_price[instrument]['four']+context.order_submission_price[instrument]['one'])/2.)
 
@@ -108,7 +107,7 @@ def tick_execution(context,instrument):
         context.portfolio.positions[instrument]=[context.order_pos[instrument]]
         context.portfolio.entry[instrument] = [current_date]
         context.portfolio.execution_time[instrument] = [current_date-context.order_submission_time[instrument]]
-        if context.exec_mode=='cross':
+        if context.config.EXEC_MODE=='cross':
             # ON THE LONG SIDE
             if context.order_pos[instrument]>=0:
                 context.portfolio.price[instrument] = [context.current[instrument].four]
@@ -119,7 +118,7 @@ def tick_execution(context,instrument):
                 context.portfolio.price[instrument] = [context.current[instrument].one]
                 try: context.portfolio.execution_loss[instrument].append(context.current[instrument].one-context.order_submission_price[instrument]['one'])
                 except: context.portfolio.execution_loss[instrument] = [context.current[instrument].one-context.order_submission_price[instrument]['one']]
-        elif context.exec_mode == 'mid':
+        elif context.config.EXEC_MODE == 'mid':
             context.portfolio.price[instrument] = [(context.current[instrument].four+context.current[instrument].one)/2.]
             try: context.portfolio.execution_loss[instrument].append((context.current[instrument].four+context.current[instrument].one)/2. \
                     -(context.order_submission_price[instrument]['four']+context.order_submission_price[instrument]['one'])/2.)

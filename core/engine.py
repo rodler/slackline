@@ -15,7 +15,7 @@ from copy import deepcopy
 from datetime import datetime
 from ipdb import set_trace
 from slackline.core.portfolio import *
-from slackline.core.performance import *
+from slackline.core.performance import Performance
 from slackline.core.order import *
 logger = Logging(__name__,'/tmp/slackline.log').logger
 
@@ -119,7 +119,6 @@ class Strategy():
                     # print '\n\n*****data finished*****\n\n'
                     finished = True
                     logger.warning(traceback.format_exc())
-
             for key in self.context.current:
                 if key in self.context.load:
                     if self.context.load[key] == 0 and self.config.DELAYED_EXECUTION:

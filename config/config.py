@@ -15,3 +15,4 @@ LOG_TRADES = True
 TRADES_FILE = 'tmp/trades.dat'
 LOG_TRADES_TO_FILE = False
 RESULTS_FILE = '/tmp/slackline_results.dat'
+EXEC_MODE = 'mid'
