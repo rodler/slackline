@@ -2,7 +2,7 @@ from numpy import *
 import numpy as np
 import traceback
 from slackline.core.utils import *
-from slackline.cythons.functions import cyth_pnl
+# from slackline.cythons.functions import cyth_pnl
 logger = Logging(__name__,'/tmp/slackline.log').logger
 
 class Performance():
