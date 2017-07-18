@@ -163,7 +163,8 @@ def reporting(context,instrument,commission,current_date):
             print msg
 
     if context.config.LOG_TRADES_TO_FILE:
-        fid = open(context.config.TRADES_FILE,'a')
-        fid.write(str(msg)+'\n')
-        fid.close()
+        if context.order_pos[instrument]:
+            fid = open(context.config.TRADES_FILE,'a')
+            fid.write(str(msg)+'\n')
+            fid.close()
 
