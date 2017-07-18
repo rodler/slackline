@@ -159,7 +159,8 @@ def reporting(context,instrument,commission,current_date):
     logger.info(msg)
     order_id = random.randint(10000000,100000000)
     if context.config.PRINT_TRADES:
-        print msg
+        if context.order_pos[instrument]:
+            print msg
 
     if context.config.LOG_TRADES_TO_FILE:
         fid = open(context.config.TRADES_FILE,'a')
