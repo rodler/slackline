@@ -38,7 +38,7 @@ class Portfolio:
             v = array(self.price[instrument])
 
             # This is a better pnl calculation but it may not be so good for bars
-            net = np.sum(q)*((ask+bid)/2.)[0]
+            net = np.sum(q)*((ask+bid)/2.)
 
             # This is the standard pnl calculation
             pnl_k=-np.sum(q*v)+net+self.locked_pnl[instrument]
