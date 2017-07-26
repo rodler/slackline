@@ -54,9 +54,9 @@ class Performance():
             current_date = get_current_date(context)
 
             # THE CYTHON IMPLEMENTATION IS VERY SLIGHTLY SLOWER.
-            if context.config.EXEC_MODE=='mid': self.pnl_curve.append(context.portfolio.calc_pnl())
+            if context.config.EXEC_MODE=='mid': self.pnl_curve.append(context.portfolio.mid_pnl())
             # self.pnl_curve.append(cyth_pnl(context.portfolio))
-            elif context.config.EXEC_MODE=='cross': self.pnl_curve.append(context.portfolio.fast_calc_pnl())
+            elif context.config.EXEC_MODE=='cross': self.pnl_curve.append(context.portfolio.cross_pnl())
             if log_all:
                 long_short = context.portfolio.calc_ls()
                 short_exposure,long_exposure = context.portfolio.calc_exposure()

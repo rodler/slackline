@@ -26,7 +26,28 @@ class Portfolio:
             pnl+=-np.dot(q,v)+net
         return pnl
 
-    def fast_calc_pnl(self):
+    def mid_pnl(self):
+        pnl = 0
+        for instrument in self.positions.keys():
+            if not instrument in self.locked_pnl:
+                self.locked_pnl[instrument] = 0
+
+            q = array(self.positions[instrument])
+            ask = array(self.context.current[instrument].four)
+            bid = array(self.context.current[instrument].one)
+            v = array(self.price[instrument])
+
+            # This is a better pnl calculation but it may not be so good for bars
+            net = np.sum(q)*((ask+bid)/2.)[0]
+
+            # This is the standard pnl calculation
+            pnl_k=-np.sum(q*v)+net+self.locked_pnl[instrument]
+            pnl += pnl_k
+        return pnl
+
+
+
+    def cross_pnl(self):
         pnl = 0
         for instrument in self.positions.keys():
             if not instrument in self.locked_pnl:
