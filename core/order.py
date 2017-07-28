@@ -151,7 +151,7 @@ def reporting(context,instrument,commission,current_date):
     else: pnl = 0
 
     if context.config.EXEC_MODE == 'mid':
-        price = mean([context.current[instrument].bid,context.current[instrument].ask])
+        price = mean([context.current[instrument].one,context.current[instrument].four])
     else:
         price = getattr(context.current[instrument],context.execution_field['instrument'])
 
